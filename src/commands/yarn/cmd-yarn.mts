@@ -11,6 +11,7 @@ import {
   trackSubprocessExit,
   trackSubprocessStart,
 } from '../../utils/telemetry/integration.mts'
+import { awaitWrappedSubprocess } from '../../utils/wrapped-subprocess.mts'
 
 import type {
   CliCommandConfig,
@@ -110,7 +111,7 @@ async function run(
     },
   )
 
-  await spawnPromise
-
-  process.exitCode = 0
+  if (await awaitWrappedSubprocess(spawnPromise)) {
+    process.exitCode = 0
+  }
 }
